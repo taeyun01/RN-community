@@ -1,3 +1,4 @@
+import Separator from "@/components/Separator";
 import { colors } from "@/constants";
 import { Post } from "@/types";
 import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
@@ -44,6 +45,7 @@ function FeedItem({ post }: FeedItemProps) {
           <Text style={styles.menuText}>1</Text>
         </Pressable>
       </View>
+      <Separator />
     </View>
   );
 }
