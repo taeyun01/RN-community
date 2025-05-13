@@ -1,11 +1,10 @@
-import { router } from "expo-router";
 import { Pressable, SafeAreaView, StyleSheet, Text } from "react-native";
 
-export default function HomeScreen() {
+export default function MyScreen() {
   return (
     <SafeAreaView style={styles.container}>
-      <Pressable onPress={() => router.push("/my")}>
-        <Text>내 프로필 이동</Text>
+      <Pressable>
+        <Text>내정보 스크린</Text>
       </Pressable>
     </SafeAreaView>
   );
