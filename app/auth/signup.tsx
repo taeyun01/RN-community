@@ -29,7 +29,7 @@ const SignupScreen = () => {
     <FormProvider {...signupForm}>
       <View style={styles.container}>
         <EmailInput />
-        <PasswordInput />
+        <PasswordInput submitBehavior="submit" />
         <PasswordConfirmInput />
       </View>
       {/* inset.bottom은 하단 영역을 계산해서 넣어줌. 안드로이드는 inset.bottom이 0 이기때문에 0이면 12px 넣어줌 */}

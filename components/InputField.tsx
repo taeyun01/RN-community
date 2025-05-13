@@ -1,5 +1,5 @@
 import { colors } from "@/constants";
-import React from "react";
+import React, { ForwardedRef, forwardRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,12 +14,10 @@ interface InputFieldProps extends TextInputProps {
   error?: string;
 }
 
-const InputField = ({
-  label,
-  variant = "filled",
-  error = "",
-  ...props
-}: InputFieldProps) => {
+const InputField = (
+  { label, variant = "filled", error = "", ...props }: InputFieldProps,
+  ref?: ForwardedRef<TextInput>
+) => {
   return (
     <View>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -31,9 +29,14 @@ const InputField = ({
         ]}
       >
         <TextInput
+          ref={ref}
           style={styles.input}
           {...props}
           placeholderTextColor={colors.GRAY_400}
+          // ⬇️ 모든 인풋에 적용됨
+          autoCapitalize="none" // 첫 글자가 대문자로 나오는데 이걸 없애줌
+          spellCheck={false} // 맞춤법 검사 없애줌 (키보드 위에 뜨는 부분)
+          autoCorrect={false} // 자동 수정 없애줌 (키보드 위에 뜨는 부분)
         />
       </View>
       {Boolean(error) && <Text style={styles.error}>{error}</Text>}
@@ -73,4 +76,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InputField;
+export default forwardRef(InputField);
