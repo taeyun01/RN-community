@@ -1,3 +1,4 @@
+import Profile from "@/components/Profile";
 import Separator from "@/components/Separator";
 import { colors } from "@/constants";
 import { Post } from "@/types";
@@ -15,6 +16,11 @@ function FeedItem({ post }: FeedItemProps) {
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
+        <Profile
+          nickname={post.author.nickname}
+          createdAt={post.createdAt}
+          onPress={() => {}}
+        />
         <Text style={styles.title}>{post.title}</Text>
         {/* numberOfLines={3} 3줄까지 처리 그 이상은 ... 처리 */}
         <Text numberOfLines={3} style={styles.description}>
