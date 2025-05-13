@@ -30,6 +30,15 @@ export default function AuthLayout() {
         options={{
           headerShown: true,
           title: "이메일 로그인",
+          headerBackButtonDisplayMode: "minimal", // 뒤로가기 <(로그인) 텍스트 표시 안되게
+        }}
+      />
+      <Stack.Screen
+        name="signup"
+        options={{
+          headerShown: true,
+          title: "회원가입",
+          headerBackButtonDisplayMode: "minimal",
         }}
       />
     </Stack>
