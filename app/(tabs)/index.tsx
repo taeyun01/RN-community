@@ -1,38 +1,59 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView>
-      <View style={styles.parent}>
-        <View style={styles.container}>
-          <Text style={styles.text}>TEXT</Text>
-        </View>
-        <View style={styles.container2}>
-          <Text style={styles.text}>TEXT</Text>
-          <Text style={styles.text}>TEXT</Text>
-          <Text style={styles.text}>TEXT</Text>
-        </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.row}>
+        <Box />
+        <Box />
+        <Box />
+      </View>
+      <View style={styles.row2}>
+        <Box />
+        <Box />
+        <Box />
+      </View>
+      <View style={styles.row3}>
+        <Box />
+        <Box />
+        <Box />
       </View>
     </SafeAreaView>
   );
 }
 
+const Box = () => {
+  return <View style={styles.box}></View>;
+};
+
 const styles = StyleSheet.create({
-  parent: {
-    flexDirection: "row", // display: flex를 하지 않아도 적용됨
-    justifyContent: "center",
-    alignItems: "center",
-  },
   container: {
-    backgroundColor: "gray",
-    padding: 24,
+    borderWidth: 2,
+    borderColor: "red",
+    height: "100%",
+    justifyContent: "center",
   },
-  container2: {
-    backgroundColor: "blue",
-    padding: 24,
+  row: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    flex: 1,
+    gap: 2,
   },
-  text: {
-    fontSize: 20,
-    color: "white",
+  row2: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    flex: 1,
+    gap: 2,
+  },
+  row3: {
+    flexDirection: "row",
+    gap: 2,
+  },
+  box: {
+    width: 50,
+    height: 50,
+    backgroundColor: "red",
+    borderWidth: 1,
+    borderColor: "black",
   },
 });
