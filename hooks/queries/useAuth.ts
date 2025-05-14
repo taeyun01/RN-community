@@ -55,12 +55,19 @@ const useAuth = () => {
   const loginMutation = useLogin();
   const signupMutation = useSignup();
 
+  const logout = () => {
+    removeHeader("Authorization");
+    deleteSecureStore("accessToken");
+    queryClient.resetQueries({ queryKey: ["auth"] }); // 첫번째 쿼리키가 auth인 쿼리들을 초기상태로 리셋함
+  };
+
   return {
     auth: {
       id: data?.id || "",
     },
     loginMutation,
     signupMutation,
+    logout,
   };
 };
 
