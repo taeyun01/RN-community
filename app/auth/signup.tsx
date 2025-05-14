@@ -2,6 +2,7 @@ import EmailInput from "@/components/EmailInput";
 import FixedBottomCTA from "@/components/FixedBottomCTA";
 import PasswordConfirmInput from "@/components/PasswordConfirmInput";
 import PasswordInput from "@/components/PasswordInput";
+import useAuth from "@/hooks/queries/useAuth";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
@@ -13,6 +14,7 @@ export type FormValues = {
 };
 
 const SignupScreen = () => {
+  const { signupMutation } = useAuth();
   const signupForm = useForm<FormValues>({
     defaultValues: {
       email: "",
@@ -22,7 +24,12 @@ const SignupScreen = () => {
   });
 
   const onSubmit = (formValues: FormValues) => {
-    console.log(formValues);
+    // console.log(formValues);
+    const { email, password } = formValues;
+    signupMutation.mutate({
+      email,
+      password,
+    });
   };
 
   return (
