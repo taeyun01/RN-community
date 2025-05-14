@@ -6,12 +6,14 @@ interface CustomButtonProps extends PressableProps {
   label: string;
   size?: "medium" | "large";
   variant?: "filled";
+  rounded?: boolean;
 }
 
 const CustomButton = ({
   label,
   size = "large",
   variant = "filled",
+  rounded = true,
   ...props // PressableProps 타입의 모든 속성을 받을 수 있음
 }: CustomButtonProps) => {
   return (
@@ -21,6 +23,7 @@ const CustomButton = ({
         styles[size],
         styles[variant],
         pressed && styles.pressed, // 버튼 눌렀을 때 효과
+        rounded && styles.rounded,
       ]}
       {...props}
     >
@@ -31,9 +34,11 @@ const CustomButton = ({
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
+  },
+  rounded: {
+    borderRadius: 8,
   },
   large: {
     width: "100%",
