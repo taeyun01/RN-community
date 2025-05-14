@@ -8,9 +8,10 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 interface FeedItemProps {
   post: Post;
+  lastPost: Post;
 }
 
-function FeedItem({ post }: FeedItemProps) {
+function FeedItem({ post, lastPost }: FeedItemProps) {
   const isLiked = true;
 
   return (
@@ -51,7 +52,8 @@ function FeedItem({ post }: FeedItemProps) {
           <Text style={styles.menuText}>1</Text>
         </Pressable>
       </View>
-      <Separator />
+      {/* 마지막 게시글은 구분선 빼기 */}
+      {post.id !== lastPost.id && <Separator />}
     </View>
   );
 }
