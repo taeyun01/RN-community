@@ -36,6 +36,7 @@ const useLogin = () => {
     },
     onError: () => {
       //TODO: 로그인 실패 시 오류 처리
+      console.log("로그인 실패");
     },
   });
 };
@@ -45,7 +46,7 @@ const useSignup = () => {
     mutationFn: postSignup,
     onSuccess: () => router.replace("/auth/login"),
     onError: () => {
-      //
+      console.log("회원가입 실패");
     },
   });
 };

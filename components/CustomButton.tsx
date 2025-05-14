@@ -7,6 +7,7 @@ interface CustomButtonProps extends PressableProps {
   size?: "medium" | "large";
   variant?: "filled";
   rounded?: boolean;
+  disabled?: boolean;
 }
 
 const CustomButton = ({
@@ -14,6 +15,7 @@ const CustomButton = ({
   size = "large",
   variant = "filled",
   rounded = true,
+  disabled = false,
   ...props // PressableProps 타입의 모든 속성을 받을 수 있음
 }: CustomButtonProps) => {
   return (
@@ -24,10 +26,14 @@ const CustomButton = ({
         styles[variant],
         pressed && styles.pressed, // 버튼 눌렀을 때 효과
         rounded && styles.rounded,
+        disabled && styles.disabled,
       ]}
+      disabled={disabled}
       {...props}
     >
-      <Text style={[styles[variant]]}>{label}</Text>
+      <Text style={[styles[variant], disabled && styles.disabledText]}>
+        {label}
+      </Text>
     </Pressable>
   );
 };
@@ -53,6 +59,13 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.8,
+  },
+  disabled: {
+    backgroundColor: colors.GRAY_300,
+  },
+  disabledText: {
+    color: colors.GRAY_500,
+    backgroundColor: colors.GRAY_300,
   },
 });
 

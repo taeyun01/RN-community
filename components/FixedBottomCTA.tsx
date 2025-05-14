@@ -7,15 +7,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 interface FixedBottomCTAProps {
   label: string;
   onPress: () => void;
+  disabled?: boolean;
 }
 
-const FixedBottomCTA = ({ label, onPress }: FixedBottomCTAProps) => {
+const FixedBottomCTA = ({ label, onPress, disabled }: FixedBottomCTAProps) => {
   const inset = useSafeAreaInsets();
 
   return (
     // inset.bottom은 하단 영역을 계산해서 넣어줌. 안드로이드는 inset.bottom이 0 이기때문에 0이면 12px 넣어줌
     <View style={[styles.fixed, { paddingBottom: inset.bottom || 12 }]}>
-      <CustomButton label={label} onPress={onPress} />
+      <CustomButton label={label} onPress={onPress} disabled={disabled} />
     </View>
   );
 };

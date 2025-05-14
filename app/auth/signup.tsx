@@ -23,13 +23,42 @@ const SignupScreen = () => {
     },
   });
 
+  const {
+    mutate: signupMutate,
+    status: signupStatus,
+    // isError: signupIsError,
+  } = signupMutation;
+
+  // const { status: loginStatus } = loginMutation;
+
+  const isLoading = signupStatus === "pending";
+  // || loginStatus === "pending";
+
   const onSubmit = (formValues: FormValues) => {
-    // console.log(formValues);
+    // 회원 가입
     const { email, password } = formValues;
-    signupMutation.mutate({
+    signupMutate({
       email,
       password,
     });
+
+    // if (signupIsError) {
+    //   return Toast.show({
+    //     type: "error",
+    //     text1: "회원가입 실패",
+    //     text2: "이미 가입된 이메일입니다.",
+    //     position: "top",
+    //   });
+    // }
+
+    // if (signupStatus.includes("success")) {
+    //   console.log("회원가입 성공1");
+    //   // 회원 가입 후 바로 로그인
+    //   loginMutate({
+    //     email,
+    //     password,
+    //   });
+    // }
   };
 
   return (
@@ -41,8 +70,9 @@ const SignupScreen = () => {
       </View>
       {/* inset.bottom은 하단 영역을 계산해서 넣어줌. 안드로이드는 inset.bottom이 0 이기때문에 0이면 12px 넣어줌 */}
       <FixedBottomCTA
-        label="회원가입 하기"
+        label={isLoading ? "처리중..." : "회원가입 하기"}
         onPress={signupForm.handleSubmit(onSubmit)}
+        disabled={isLoading}
       />
     </FormProvider>
   );
