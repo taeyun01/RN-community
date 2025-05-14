@@ -64,6 +64,7 @@ const useAuth = () => {
   return {
     auth: {
       id: data?.id || "",
+      nickname: data?.nickname || "",
     },
     loginMutation,
     signupMutation,
