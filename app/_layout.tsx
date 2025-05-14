@@ -43,6 +43,7 @@ const RootNavigator = () => {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       {/* auth폴더도 이동할 수 있도록 추가, 최상단 헤더는 숨김 */}
       <Stack.Screen name="auth" options={{ headerShown: false }} />
+      <Stack.Screen name="post" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>
   );

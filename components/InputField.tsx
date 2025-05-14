@@ -26,6 +26,7 @@ const InputField = (
           styles.container,
           styles[variant],
           Boolean(error) && styles.inputError,
+          props.multiline && styles.multiline, // 멀티라인 인풋일 경우 스타일 조정
         ]}
       >
         <TextInput
@@ -73,6 +74,11 @@ const styles = StyleSheet.create({
   },
   inputError: {
     backgroundColor: colors.RED_100,
+  },
+  multiline: {
+    alignItems: "flex-start",
+    paddingVertical: 10,
+    height: 200,
   },
 });
 
