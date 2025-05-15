@@ -1,6 +1,7 @@
 import Profile from "@/components/Profile";
 import Separator from "@/components/Separator";
 import { colors } from "@/constants";
+import useAuth from "@/hooks/queries/useAuth";
 import { Post } from "@/types";
 import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import React from "react";
@@ -12,7 +13,9 @@ interface FeedItemProps {
 }
 
 function FeedItem({ post, lastPost }: FeedItemProps) {
-  const isLiked = true;
+  const { auth } = useAuth();
+  const likeUsers = post.likes?.map((like) => Number(like.userId)); // 좋아요 누른 사람들의 아이디 배열
+  const isLiked = likeUsers?.includes(Number(auth?.id)); // 내 아이디가 포함되어 있다면 좋아요 상태
 
   return (
     <View style={styles.container}>
@@ -36,7 +39,7 @@ function FeedItem({ post, lastPost }: FeedItemProps) {
             color={isLiked ? colors.ORANGE_600 : colors.BLACK}
           />
           <Text style={isLiked ? styles.activeMenuText : styles.menuText}>
-            1
+            {post.likes?.length || "좋아요"}
           </Text>
         </Pressable>
         <Pressable style={styles.menu}>
@@ -45,11 +48,11 @@ function FeedItem({ post, lastPost }: FeedItemProps) {
             size={16}
             color={colors.BLACK}
           />
-          <Text style={styles.menuText}>1</Text>
+          <Text style={styles.menuText}>{post.commentCount || "댓글"}</Text>
         </Pressable>
         <Pressable style={styles.menu}>
           <Ionicons name="eye-outline" size={16} color={colors.BLACK} />
-          <Text style={styles.menuText}>1</Text>
+          <Text style={styles.menuText}>{post.viewCount}</Text>
         </Pressable>
       </View>
       {/* 마지막 게시글은 구분선 빼기 */}

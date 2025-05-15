@@ -1,5 +1,6 @@
 import { getMe, postLogin, postSignup } from "@/api/auth";
 import queryClient from "@/api/queryClient";
+import { queryKeys } from "@/constants";
 import { removeHeader, setHeader } from "@/utils/header";
 import {
   deleteSecureStore,
@@ -14,7 +15,7 @@ const useGetMe = () => {
   // 서버에서 가져온 데이터를 리턴해줌
   const { data, isError, isSuccess } = useQuery({
     queryFn: getMe,
-    queryKey: ["auth", "getMe"],
+    queryKey: [queryKeys.AUTH, queryKeys.GET_ME],
   });
 
   useEffect(() => {
