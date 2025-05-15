@@ -1,17 +1,30 @@
 import { getMe, postLogin, postSignup } from "@/api/auth";
 import queryClient from "@/api/queryClient";
 import { removeHeader, setHeader } from "@/utils/header";
-import { deleteSecureStore, saveSecureStore } from "@/utils/secureStore";
+import {
+  deleteSecureStore,
+  getSecureStore,
+  saveSecureStore,
+} from "@/utils/secureStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useEffect } from "react";
 
 const useGetMe = () => {
   // 서버에서 가져온 데이터를 리턴해줌
-  const { data, isError } = useQuery({
+  const { data, isError, isSuccess } = useQuery({
     queryFn: getMe,
     queryKey: ["auth", "getMe"],
   });
+
+  useEffect(() => {
+    (async () => {
+      if (isSuccess) {
+        const accessToken = await getSecureStore("accessToken");
+        setHeader("Authorization", `Bearer ${accessToken}`);
+      }
+    })();
+  }, [isSuccess]);
 
   // useGetMe훅은 토큰을 이용해 내 정보를 가져오는 역할임
   // 그런데 토큰이 잘못됐거나 유효기간이 지난 토큰인 경우 에러가 발생하는데 이를 위한 에러처리

@@ -5,7 +5,7 @@ import { Pressable, PressableProps, StyleSheet, Text } from "react-native";
 interface CustomButtonProps extends PressableProps {
   label: string;
   size?: "medium" | "large";
-  variant?: "filled";
+  variant?: "filled" | "standard";
   rounded?: boolean;
   disabled?: boolean;
 }
@@ -31,7 +31,13 @@ const CustomButton = ({
       disabled={disabled}
       {...props}
     >
-      <Text style={[styles[variant], disabled && styles.disabledText]}>
+      <Text
+        style={[
+          styles[variant],
+          disabled && styles.disabledText,
+          variant === "standard" && disabled && styles.disabledStandard,
+        ]}
+      >
         {label}
       </Text>
     </Pressable>
@@ -66,6 +72,15 @@ const styles = StyleSheet.create({
   disabledText: {
     color: colors.GRAY_500,
     backgroundColor: colors.GRAY_300,
+  },
+  standard: {
+    color: colors.ORANGE_600,
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  disabledStandard: {
+    color: colors.GRAY_500,
+    backgroundColor: colors.WHITE,
   },
 });
 

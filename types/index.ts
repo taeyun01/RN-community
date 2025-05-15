@@ -30,8 +30,8 @@ interface CreatePostDto {
   title: string;
   description: string;
   imageUris: ImageUri[];
-  voteTitle?: string;
-  voteOptions?: VoteOption[];
+  voteTitle?: string; // 투표 제목
+  voteOptions?: VoteOption[]; // 투표 옵션
 }
 
 interface CreateCommentDto {
@@ -82,14 +82,14 @@ interface Post {
 }
 
 export type {
-  Profile,
+  Comment,
+  CreateCommentDto,
+  CreatePostDto,
+  CreateVoteDto,
+  ImageUri,
+  Post,
   PostVote,
   PostVoteOption,
-  CreatePostDto,
-  CreateCommentDto,
-  CreateVoteDto,
-  Post,
-  Comment,
-  ImageUri,
+  Profile,
   VoteOption,
 };
