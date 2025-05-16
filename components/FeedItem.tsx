@@ -3,6 +3,7 @@ import Separator from "@/components/Separator";
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/useAuth";
 import { Post } from "@/types";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -15,7 +16,34 @@ interface FeedItemProps {
 function FeedItem({ post, lastPost }: FeedItemProps) {
   const { auth } = useAuth();
   const likeUsers = post.likes?.map((like) => Number(like.userId)); // 좋아요 누른 사람들의 아이디 배열
-  const isLiked = likeUsers?.includes(Number(auth?.id)); // 내 아이디가 포함되어 있다면 좋아요 상태
+  const isLiked = likeUsers?.includes(Number(auth?.id)); // 내 아이디가 포함되어 있다면 좋아요 상태값
+  const { showActionSheetWithOptions } = useActionSheet();
+
+  const handlePressOption = () => {
+    const options = ["삭제", "수정", "취소"];
+    const destructiveButtonIndex = 0;
+    const cancelButtonIndex = 2;
+
+    // cancelButtonIndex, destructiveButtonIndex 0과 2대신 매개변수로 넣어주면 스타일도 변함
+    showActionSheetWithOptions(
+      { options, cancelButtonIndex, destructiveButtonIndex },
+      (selectedIndex?: number) => {
+        switch (selectedIndex) {
+          case destructiveButtonIndex: // 삭제
+            console.log("삭제");
+            break;
+          case 1: // 수정
+            console.log("수정");
+            break;
+          case cancelButtonIndex: // 취소
+            console.log("취소");
+            break;
+          default:
+            break;
+        }
+      }
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -24,6 +52,17 @@ function FeedItem({ post, lastPost }: FeedItemProps) {
           nickname={post.author.nickname}
           createdAt={post.createdAt}
           onPress={() => {}}
+          option={
+            auth.id === post.author.id && (
+              <Ionicons
+                name="ellipsis-vertical"
+                size={22}
+                color={colors.BLACK}
+                style={{ marginLeft: "auto" }}
+                onPress={handlePressOption}
+              />
+            )
+          }
         />
         <Text style={styles.title}>{post.title}</Text>
         {/* numberOfLines={3} 3줄까지 처리 그 이상은 ... 처리 */}
