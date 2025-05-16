@@ -35,7 +35,12 @@ function FeedItem({ post, lastPost, isDetail = false }: FeedItemProps) {
         // console.log("selectedIndex: ", selectedIndex); // 선택된 인덱스 번호
         switch (selectedIndex) {
           case destructiveButtonIndex: // 삭제
-            deletePost(post.id);
+            deletePost(post.id, {
+              onSuccess: () =>
+                isDetail && router.canGoBack()
+                  ? router.back()
+                  : router.replace("/"), // 상세페이지에서 삭제 버튼 누르면 뒤로가기.
+            });
             break;
           case 1: // 수정
             router.push(`/post/update/${post.id}`);
