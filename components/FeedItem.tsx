@@ -12,10 +12,11 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 interface FeedItemProps {
   post: Post;
-  lastPost: Post;
+  lastPost?: Post;
+  isDetail?: boolean;
 }
 
-function FeedItem({ post, lastPost }: FeedItemProps) {
+function FeedItem({ post, lastPost, isDetail = false }: FeedItemProps) {
   const { auth } = useAuth();
   const likeUsers = post.likes?.map((like) => Number(like.userId)); // 좋아요 누른 사람들의 아이디 배열
   const isLiked = likeUsers?.includes(Number(auth?.id)); // 내 아이디가 포함되어 있다면 좋아요 상태값
@@ -49,8 +50,17 @@ function FeedItem({ post, lastPost }: FeedItemProps) {
     );
   };
 
+  const handlePressFeed = () => {
+    // 피드 아이템이 상세페이지에서 보이는 상태인지 아닌지 확인 (보이는 상태가 아니면 )
+    if (!isDetail) {
+      router.push(`/post/${post.id}`);
+    }
+  };
+
+  const ContainerComponent = isDetail ? View : Pressable;
+
   return (
-    <View style={styles.container}>
+    <ContainerComponent style={styles.container} onPress={handlePressFeed}>
       <View style={styles.contentContainer}>
         <Profile
           nickname={post.author.nickname}
@@ -99,8 +109,8 @@ function FeedItem({ post, lastPost }: FeedItemProps) {
         </Pressable>
       </View>
       {/* 마지막 게시글은 구분선 빼기 */}
-      {post.id !== lastPost.id && <Separator />}
-    </View>
+      {post.id !== lastPost?.id && <Separator />}
+    </ContainerComponent>
   );
 }
 

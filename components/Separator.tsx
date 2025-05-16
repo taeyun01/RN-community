@@ -7,7 +7,7 @@ type SeparatorProps = {
 };
 
 const Separator = ({
-  paddingVertical = 8,
+  paddingVertical = 6,
   backgroundColor = colors.GRAY_200,
 }: SeparatorProps) => {
   return (

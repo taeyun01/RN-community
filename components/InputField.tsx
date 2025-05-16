@@ -1,5 +1,5 @@
 import { colors } from "@/constants";
-import React, { ForwardedRef, forwardRef } from "react";
+import React, { ForwardedRef, forwardRef, ReactNode } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,10 +12,17 @@ interface InputFieldProps extends TextInputProps {
   label?: string;
   variant?: "filled" | "outlined" | "standard";
   error?: string;
+  rightChild?: ReactNode;
 }
 
 const InputField = (
-  { label, variant = "filled", error = "", ...props }: InputFieldProps,
+  {
+    label,
+    variant = "filled",
+    error = "",
+    rightChild = null,
+    ...props
+  }: InputFieldProps,
   ref?: ForwardedRef<TextInput>
 ) => {
   return (
@@ -39,7 +46,9 @@ const InputField = (
           spellCheck={false} // 맞춤법 검사 없애줌 (키보드 위에 뜨는 부분)
           autoCorrect={false} // 자동 수정 없애줌 (키보드 위에 뜨는 부분)
         />
+        {rightChild}
       </View>
+
       {Boolean(error) && <Text style={styles.error}>{error}</Text>}
     </View>
   );
@@ -51,6 +60,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   label: {
     fontSize: 12,
