@@ -11,7 +11,7 @@ const colors = {
   GRAY_500: "#6B7280",
   GRAY_600: "#4B5563",
   GRAY_700: "#374151",
-};
+} as const;
 
 const queryKeys = {
   AUTH: "auth",
@@ -19,6 +19,6 @@ const queryKeys = {
   POST: "post",
   GET_POSTS: "getPosts",
   GET_POST: "getPost",
-};
+} as const;
 
 export { colors, queryKeys };
