@@ -68,7 +68,11 @@ function CommentItem({
 
   return (
     <View
-      style={[styles.container, { backgroundColor: getCommentBackground() }]}
+      style={[
+        styles.container,
+        { backgroundColor: getCommentBackground() },
+        comment.isDeleted && { gap: 0 },
+      ]}
     >
       <View style={styles.profileContainer}>
         {/* 답글인 경우 화살표 표시(대댓글인 경우) */}
@@ -79,32 +83,39 @@ function CommentItem({
             color={"black"}
           />
         )}
-        <Profile
-          // comment에는 isDeleted라는 값이 있음 (삭제됐는지 안됐는지에 대한 값)
-          imageUri={comment.isDeleted ? "" : comment.user.imageUri} // 삭제됐으면 이미지 없음
-          nickname={comment.isDeleted ? "(삭제)" : comment.user.nickname} // 삭제됐으면 닉네임 대신 (삭제) 표시
-          createdAt={comment.createdAt}
-          onPress={() => {}}
-          option={
-            // 옵션은 내 댓글이면서 삭제되지 않은 경우에만 표시
-            auth.id === comment.user.id &&
-            !comment.isDeleted && (
-              <Ionicons
-                name="ellipsis-vertical"
-                size={24}
-                color="black"
-                onPress={handlePressOption}
-              />
-            )
-          }
-        />
+        {/* 삭제되지 않은 댓글인 경우 */}
+        {!comment.isDeleted && (
+          <Profile
+            // comment에는 isDeleted라는 값이 있음 (삭제됐는지 안됐는지에 대한 값)
+            imageUri={comment.user.imageUri} // 삭제됐으면 이미지 없음
+            nickname={comment.user.nickname} // 삭제됐으면 닉네임 대신 (삭제) 표시
+            createdAt={comment.createdAt}
+            onPress={() => {}}
+            option={
+              // 옵션은 내 댓글이면서 삭제되지 않은 경우에만 표시
+              auth.id === comment.user.id && (
+                <Ionicons
+                  name="ellipsis-vertical"
+                  size={24}
+                  color="black"
+                  onPress={handlePressOption}
+                />
+              )
+            }
+          />
+        )}
       </View>
       {/* 삭제된 댓글인 경우 삭제된 댓글입니다. 표시 */}
-      <InputField
-        editable={false} // 수정 불가능하게 설정
-        value={comment.isDeleted ? "삭제된 댓글입니다." : comment.content} // 삭제된 댓글이면 삭제된 댓글입니다. 표시
-        variant="standard"
-      />
+      {comment.isDeleted ? (
+        <Text>삭제된 댓글입니다.</Text>
+      ) : (
+        <InputField
+          editable={false} // 수정 불가능하게 설정
+          value={comment.content} // 삭제된 댓글이면 삭제된 댓글입니다. 표시
+          variant="standard"
+        />
+      )}
+
       {/* 답글 남기기 버튼 (삭제되지 않은 댓글이면서 대댓글이 아닌 경우) */}
       {!comment.isDeleted && !isReply && (
         <View style={styles.replyButtonContainer}>
