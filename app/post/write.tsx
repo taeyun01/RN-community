@@ -1,5 +1,6 @@
 import CustomButton from "@/components/CustomButton";
 import DescriptionInput from "@/components/DescriptionInput";
+import PostWriteFooter from "@/components/PostWriteFooter";
 import TitleInput from "@/components/TitleInput";
 import useCreatePost from "@/hooks/queries/useCreatePost";
 import { ImageUri } from "@/types";
@@ -57,6 +58,7 @@ export default function PostWriteScreen() {
         <TitleInput />
         <DescriptionInput />
       </KeyboardAwareScrollView>
+      <PostWriteFooter />
     </FormProvider>
   );
 }
