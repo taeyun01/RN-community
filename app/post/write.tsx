@@ -1,5 +1,6 @@
 import CustomButton from "@/components/CustomButton";
 import DescriptionInput from "@/components/DescriptionInput";
+import ImagePreviewList from "@/components/ImagePreviewList";
 import PostWriteFooter from "@/components/PostWriteFooter";
 import TitleInput from "@/components/TitleInput";
 import useCreatePost from "@/hooks/queries/useCreatePost";
@@ -27,6 +28,9 @@ export default function PostWriteScreen() {
       imageUris: [],
     },
   });
+
+  // postForm의 imageUris배열에 이미지가 담김
+  console.log("imageUris", postForm.watch().imageUris);
 
   const onSubmit = useCallback(
     (formValues: FormValues) => {
@@ -57,6 +61,7 @@ export default function PostWriteScreen() {
       <KeyboardAwareScrollView contentContainerStyle={styles.container}>
         <TitleInput />
         <DescriptionInput />
+        <ImagePreviewList imageUris={postForm.watch().imageUris} />
       </KeyboardAwareScrollView>
       <PostWriteFooter />
     </FormProvider>

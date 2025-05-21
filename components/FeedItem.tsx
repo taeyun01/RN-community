@@ -1,3 +1,4 @@
+import ImagePreviewList from "@/components/ImagePreviewList";
 import Profile from "@/components/Profile";
 import Separator from "@/components/Separator";
 import { colors } from "@/constants";
@@ -88,6 +89,7 @@ function FeedItem({ post, lastPost, isDetail = false }: FeedItemProps) {
         <Text numberOfLines={3} style={styles.description}>
           {post.description}
         </Text>
+        <ImagePreviewList imageUris={post.imageUris} />
       </View>
       <View style={styles.menuContainer}>
         <Pressable style={styles.menu}>
