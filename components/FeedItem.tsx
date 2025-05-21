@@ -5,6 +5,7 @@ import Vote from "@/components/Vote";
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/useAuth";
 import useDeletePost from "@/hooks/queries/useDeletePost";
+import useLikePost from "@/hooks/queries/useLikePost";
 import { Post } from "@/types";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Ionicons, MaterialCommunityIcons, Octicons } from "@expo/vector-icons";
@@ -24,6 +25,7 @@ function FeedItem({ post, lastPost, isDetail = false }: FeedItemProps) {
   const isLiked = likeUsers?.includes(Number(auth?.id)); // 내 아이디가 포함되어 있다면 좋아요 상태값
   const { showActionSheetWithOptions } = useActionSheet();
   const { mutate: deletePost } = useDeletePost();
+  const { mutate: likePost } = useLikePost();
 
   const handlePressOption = () => {
     const options = ["삭제", "수정", "취소"];
@@ -62,6 +64,20 @@ function FeedItem({ post, lastPost, isDetail = false }: FeedItemProps) {
     if (!isDetail) {
       router.push(`/post/${post.id}`);
     }
+  };
+
+  const handlePressLike = () => {
+    // 로그인 상태가 아니면 로그인 페이지로 이동
+    if (!auth.id) {
+      return router.push("/auth");
+    }
+
+    // 상세페이지가 아니면 상세페이지로 이동
+    if (!isDetail) {
+      return router.push(`/post/${post.id}`);
+    }
+
+    likePost(post.id);
   };
 
   const ContainerComponent = isDetail ? View : Pressable;
@@ -117,7 +133,7 @@ function FeedItem({ post, lastPost, isDetail = false }: FeedItemProps) {
         )}
       </View>
       <View style={styles.menuContainer}>
-        <Pressable style={styles.menu}>
+        <Pressable style={styles.menu} onPress={handlePressLike}>
           <Octicons
             name={isLiked ? "heart-fill" : "heart"}
             size={16}
@@ -127,7 +143,7 @@ function FeedItem({ post, lastPost, isDetail = false }: FeedItemProps) {
             {post.likes?.length || "좋아요"}
           </Text>
         </Pressable>
-        <Pressable style={styles.menu}>
+        <Pressable style={styles.menu} onPress={handlePressFeed}>
           <MaterialCommunityIcons
             name="comment-processing-outline"
             size={16}
@@ -135,7 +151,7 @@ function FeedItem({ post, lastPost, isDetail = false }: FeedItemProps) {
           />
           <Text style={styles.menuText}>{post.commentCount || "댓글"}</Text>
         </Pressable>
-        <Pressable style={styles.menu}>
+        <Pressable style={styles.menu} onPress={handlePressFeed}>
           <Ionicons name="eye-outline" size={16} color={colors.BLACK} />
           <Text style={styles.menuText}>{post.viewCount}</Text>
         </Pressable>
