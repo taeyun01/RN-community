@@ -1,6 +1,7 @@
 import CustomButton from "@/components/CustomButton";
 import DescriptionInput from "@/components/DescriptionInput";
 import TitleInput from "@/components/TitleInput";
+import VoteAttached from "@/components/VoteAttached";
 import useGetPost from "@/hooks/queries/useGetPost";
 import useUpdatePost from "@/hooks/queries/useUpdatePost";
 import { ImageUri } from "@/types";
@@ -14,6 +15,7 @@ type FormValues = {
   title: string;
   description: string;
   imageUris: ImageUri[];
+  isVoteAttached: boolean; // 투표 첨부 여부
 };
 
 // post/update/[id] 페이지
@@ -28,10 +30,11 @@ export default function PostUpdateScreen() {
       title: post?.title,
       description: post?.description,
       imageUris: post?.imageUris,
+      isVoteAttached: post?.hasVote, // post에 투표 첨부 여부 상태가 있음
     },
   });
 
-  // console.log("post: ", post);
+  console.log("post.hasVote: ", post?.hasVote);
 
   const onSubmit = useCallback(
     (formValues: FormValues) => {
@@ -69,6 +72,7 @@ export default function PostUpdateScreen() {
         title: post.title,
         description: post.description,
         imageUris: post.imageUris,
+        isVoteAttached: post.hasVote,
       });
     }
   }, [post, postForm]);
@@ -78,6 +82,7 @@ export default function PostUpdateScreen() {
       <KeyboardAwareScrollView contentContainerStyle={styles.container}>
         <TitleInput />
         <DescriptionInput />
+        <VoteAttached />
       </KeyboardAwareScrollView>
     </FormProvider>
   );

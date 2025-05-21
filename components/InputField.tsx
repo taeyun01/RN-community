@@ -38,7 +38,7 @@ const InputField = (
       >
         <TextInput
           ref={ref}
-          style={styles.input}
+          style={[styles.input, styles[`${variant}Text`]]}
           {...props}
           placeholderTextColor={colors.GRAY_400}
           // ⬇️ 모든 인풋에 적용됨
@@ -71,8 +71,24 @@ const styles = StyleSheet.create({
   filled: {
     backgroundColor: colors.GRAY_100,
   },
-  outlined: {},
-  standard: {},
+  outlined: {
+    borderWidth: 1,
+    borderColor: colors.ORANGE_600,
+  },
+  standard: {
+    borderWidth: 1,
+    borderColor: colors.GRAY_200,
+  },
+  standardText: {
+    color: colors.BLACK,
+  },
+  outlinedText: {
+    color: colors.ORANGE_600,
+    fontWeight: "bold",
+  },
+  filledText: {
+    color: colors.BLACK,
+  },
   input: {
     fontSize: 16,
     padding: 0,
