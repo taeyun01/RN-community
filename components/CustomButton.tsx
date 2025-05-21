@@ -33,7 +33,7 @@ const CustomButton = ({
     >
       <Text
         style={[
-          styles[variant],
+          styles[`${variant}Text`],
           disabled && styles.disabledText,
           variant === "standard" && disabled && styles.disabledStandard,
         ]}
@@ -59,9 +59,6 @@ const styles = StyleSheet.create({
   medium: {},
   filled: {
     backgroundColor: colors.ORANGE_600,
-    color: colors.WHITE,
-    fontSize: 14,
-    fontWeight: "bold",
   },
   pressed: {
     opacity: 0.8,
@@ -73,14 +70,20 @@ const styles = StyleSheet.create({
     color: colors.GRAY_500,
     backgroundColor: colors.GRAY_300,
   },
-  standard: {
+  standard: {},
+  disabledStandard: {
+    color: colors.GRAY_500,
+    backgroundColor: colors.WHITE,
+  },
+  standardText: {
     color: colors.ORANGE_600,
     fontSize: 14,
     fontWeight: "bold",
   },
-  disabledStandard: {
-    color: colors.GRAY_500,
-    backgroundColor: colors.WHITE,
+  filledText: {
+    color: colors.WHITE,
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });
 
