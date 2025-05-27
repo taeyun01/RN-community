@@ -80,6 +80,8 @@ const useAuth = () => {
     auth: {
       id: data?.id || "",
       nickname: data?.nickname || "",
+      imageUri: data?.imageUri || "",
+      introduce: data?.introduce || "",
     },
     loginMutation,
     signupMutation,
