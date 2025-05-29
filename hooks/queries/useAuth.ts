@@ -1,4 +1,4 @@
-import { getMe, postLogin, postSignup } from "@/api/auth";
+import { editProfile, getMe, postLogin, postSignup } from "@/api/auth";
 import queryClient from "@/api/queryClient";
 import { queryKeys } from "@/constants";
 import { removeHeader, setHeader } from "@/utils/header";
@@ -65,10 +65,25 @@ const useSignup = () => {
   });
 };
 
+const useUpdateProfile = () => {
+  return useMutation({
+    mutationFn: editProfile,
+    onSuccess: (newProfile) => {
+      queryClient.setQueryData([queryKeys.AUTH, queryKeys.GET_ME], newProfile);
+      queryClient.invalidateQueries({ queryKey: [queryKeys.POST] });
+      router.back();
+    },
+    onError: () => {
+      console.log("프로필 수정 실패");
+    },
+  });
+};
+
 const useAuth = () => {
   const { data } = useGetMe();
   const loginMutation = useLogin();
   const signupMutation = useSignup();
+  const profileMutation = useUpdateProfile();
 
   const logout = () => {
     removeHeader("Authorization");
@@ -86,6 +101,7 @@ const useAuth = () => {
     loginMutation,
     signupMutation,
     logout,
+    profileMutation,
   };
 };
 
