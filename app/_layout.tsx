@@ -32,7 +32,7 @@ export default function RootLayout() {
 
 const RootNavigator = () => {
   const { auth } = useAuth();
-  console.log("auth: ", auth);
+  // console.log("auth: ", auth);
 
   useEffect(() => {
     auth.id &&
@@ -50,6 +50,7 @@ const RootNavigator = () => {
       {/* auth폴더도 이동할 수 있도록 추가, 최상단 헤더는 숨김 */}
       <Stack.Screen name="auth" options={{ headerShown: false }} />
       <Stack.Screen name="post" options={{ headerShown: false }} />
+      <Stack.Screen name="profile" options={{ headerShown: false }} />
       <Stack.Screen name="image" options={{ headerShown: false }} />
       <Stack.Screen name="+not-found" />
     </Stack>

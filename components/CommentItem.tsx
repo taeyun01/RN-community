@@ -4,6 +4,7 @@ import useDeleteComment from "@/hooks/queries/useDeleteComment";
 import { Comment } from "@/types";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import InputField from "./InputField";
@@ -90,7 +91,11 @@ function CommentItem({
             imageUri={comment.user.imageUri} // 삭제됐으면 이미지 없음
             nickname={comment.user.nickname} // 삭제됐으면 닉네임 대신 (삭제) 표시
             createdAt={comment.createdAt}
-            onPress={() => {}}
+            onPress={() => {
+              if (!comment.isDeleted) {
+                router.push(`/profile/${comment.user.id}`);
+              }
+            }}
             option={
               // 옵션은 내 댓글이면서 삭제되지 않은 경우에만 표시
               auth.id === comment.user.id && (

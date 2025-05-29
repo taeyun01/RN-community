@@ -35,4 +35,11 @@ const getMe = async (): Promise<Profile> => {
   return data;
 };
 
-export { getMe, postLogin, postSignup };
+// 해당 유저 프로필 정보 가져오기
+const getUserProfile = async (id: number): Promise<Profile> => {
+  const { data } = await axiosInstance.get(`/auth/${id}`);
+
+  return data;
+};
+
+export { getMe, getUserProfile, postLogin, postSignup };
