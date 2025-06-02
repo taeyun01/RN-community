@@ -4,19 +4,20 @@ import Tab from "@/components/Tab";
 import { colors } from "@/constants";
 import useAuth from "@/hooks/queries/useAuth";
 import useGetAvatarItems from "@/hooks/queries/useGetAvatarItems";
-import React, { useRef, useState } from "react";
+import { useNavigation } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import PagerView from "react-native-pager-view";
-import SvgUri from "react-native-svg";
+import Toast from "react-native-toast-message";
 
 const avatarTabs = ["모자", "얼굴", "상의", "하의", "손", "피부"] as const;
 
 export default function AvatarScreen() {
+  const navigation = useNavigation();
   const pagerRef = useRef<PagerView | null>(null);
   const [currentTab, setCurrentTab] = useState(0);
   const { hats, faces, tops, bottoms, hands, skins } = useGetAvatarItems();
-  const avatarItems = [hats, faces, tops, bottoms, hands, skins];
-  const { auth } = useAuth();
+  const { auth, profileMutation } = useAuth();
   const [avatarItem, setAvatarItem] = useState({
     hatId: auth?.hatId ?? "",
     faceId: auth?.faceId ?? "",
@@ -25,54 +26,55 @@ export default function AvatarScreen() {
     handId: auth?.handId ?? "",
     skinId: auth?.skinId ?? "",
   });
+
+  const avatarItems = [
+    { data: hats, name: "hatId", id: avatarItem.hatId },
+    { data: faces, name: "faceId", id: avatarItem.faceId },
+    { data: tops, name: "topId", id: avatarItem.topId },
+    { data: bottoms, name: "bottomId", id: avatarItem.bottomId },
+    { data: hands, name: "handId", id: avatarItem.handId },
+    { data: skins, name: "skinId", id: avatarItem.skinId },
+  ];
   // console.log("avatarItems: ", avatarItems);
 
+  const getImageId = (url: string) => {
+    const filename = url.split("/").pop() ?? "";
+    const id = filename.split(".")[0]; // hats/01.png -> 01만 뽑아오기
+    return id;
+  };
+
   const handlePressItem = (name: string, item: string) => {
+    //* 매개변수 item은 hats/01.png 형식으로 들어오는데, 여기서 01(id)만 뽑아서 상태에 저장 해줘야함
     setAvatarItem((prev) => ({ ...prev, [name]: getImageId(item) }));
   };
 
   const handlePressTab = (index: number) => {
     pagerRef.current?.setPage(index);
-    // hats/01.png
     setCurrentTab(index);
   };
+
+  const handleSaveAvatar = () => {
+    profileMutation.mutate(avatarItem, {
+      onSuccess: () => {
+        Toast.show({
+          type: "success",
+          text1: "저장되었습니다.",
+        });
+      },
+    });
+  };
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerStyle: {
+        backgroundColor: colors.ORANGE_200,
+      },
+    });
+  }, [navigation]);
 
   return (
     <>
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <View style={styles.avatarContainer}>
-            {/* 아이템 카테고리와 그 카테고리의 해당하는 id를 넣으면 서버에서 아바타 이미지를 반환하는 함수 */}
-            <SvgUri
-              uri={getAvatarItemUri("hats", avatarItem.hatId)}
-              style={[styles.avatar, { zIndex: 70 }]}
-            />
-            <SvgUri
-              uri={getAvatarItemUri("faces", avatarItem.faceId)}
-              style={[styles.avatar, { zIndex: 60 }]}
-            />
-            <SvgUri
-              uri={getAvatarItemUri("tops", avatarItem.topId)}
-              style={[styles.avatar, { zIndex: 50 }]}
-            />
-            <SvgUri
-              uri={getAvatarItemUri("bottoms", avatarItem.bottomId)}
-              style={[styles.avatar, { zIndex: 40 }]}
-            />
-            <SvgUri
-              uri={getAvatarItemUri("default")}
-              style={[styles.avatar, { zIndex: 30 }]}
-            />
-            <SvgUri
-              uri={getAvatarItemUri("skins", avatarItem.skinId)}
-              style={[styles.avatar, { zIndex: 20 }]}
-            />
-            <SvgUri
-              uri={getAvatarItemUri("hands", avatarItem.handId)}
-              style={[styles.avatar, { zIndex: 10 }]}
-            />
-          </View>
-        </View>
         <View style={styles.tabContainer}>
           {avatarTabs.map((tab, index) => (
             <Tab
@@ -93,79 +95,28 @@ export default function AvatarScreen() {
           {avatarItems.map((items, index) => {
             return (
               <FlatList
-                key={index}
-                data={items}
+                key={items.id}
+                data={items.data}
                 keyExtractor={(item, index) => String(index)}
                 numColumns={3}
                 contentContainerStyle={styles.listContainer}
                 renderItem={({ item }) => (
                   <AvatarItem
                     uri={item}
-                    isSelected={false}
-                    onPress={() => handlePressItem(avatarTabs[index], item)}
+                    isSelected={
+                      getImageId(item) ===
+                      avatarItem[items.name as keyof typeof avatarItem]
+                    }
+                    onPress={() => handlePressItem(items.name, item)}
                   />
                 )}
               />
             );
           })}
-          {/* <FlatList
-            data={hats}
-            keyExtractor={(item, index) => String(index)}
-            numColumns={3}
-            contentContainerStyle={styles.listContainer}
-            renderItem={({ item }) => (
-              <AvatarItem uri={item} isSelected={false} />
-            )}
-          />
-          <FlatList
-            data={faces}
-            keyExtractor={(item, index) => String(index)}
-            numColumns={3}
-            contentContainerStyle={styles.listContainer}
-            renderItem={({ item }) => (
-              <AvatarItem uri={item} isSelected={false} />
-            )}
-          />
-          <FlatList
-            data={tops}
-            keyExtractor={(item, index) => String(index)}
-            numColumns={3}
-            contentContainerStyle={styles.listContainer}
-            renderItem={({ item }) => (
-              <AvatarItem uri={item} isSelected={false} />
-            )}
-          />
-          <FlatList
-            data={bottoms}
-            keyExtractor={(item, index) => String(index)}
-            numColumns={3}
-            contentContainerStyle={styles.listContainer}
-            renderItem={({ item }) => (
-              <AvatarItem uri={item} isSelected={false} />
-            )}
-          />
-          <FlatList
-            data={hands}
-            keyExtractor={(item, index) => String(index)}
-            numColumns={3}
-            contentContainerStyle={styles.listContainer}
-            renderItem={({ item }) => (
-              <AvatarItem uri={item} isSelected={false} />
-            )}
-          />
-          <FlatList
-            data={skins}
-            keyExtractor={(item, index) => String(index)}
-            numColumns={3}
-            contentContainerStyle={styles.listContainer}
-            renderItem={({ item }) => (
-              <AvatarItem uri={item} isSelected={false} />
-            )}
-          /> */}
         </PagerView>
       </View>
 
-      <FixedBottomCTA label="저장" onPress={() => {}} />
+      <FixedBottomCTA label="저장" onPress={handleSaveAvatar} />
     </>
   );
 }

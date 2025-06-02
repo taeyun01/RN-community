@@ -1,9 +1,17 @@
+import { baseUrls } from "@/api/axios";
 import { colors } from "@/constants";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
 import React, { ReactNode } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ko");
@@ -29,7 +37,11 @@ function Profile({
         <Image
           source={
             imageUri
-              ? { uri: imageUri } // 유저 프로필이 있을 때
+              ? {
+                  uri: `${
+                    Platform.OS === "ios" ? baseUrls.ios : baseUrls.android
+                  }/${imageUri}`,
+                } // 유저 프로필이 있을 때
               : require("@/assets/images/default-avatar.png") // 없으면 기본값
           }
           style={styles.avatar}
