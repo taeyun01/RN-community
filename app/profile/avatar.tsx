@@ -27,6 +27,7 @@ export default function AvatarScreen() {
     skinId: auth?.skinId ?? "",
   });
 
+  // 아바타 아이템 데이터
   const avatarItems = [
     { data: hats, name: "hatId", id: avatarItem.hatId },
     { data: faces, name: "faceId", id: avatarItem.faceId },
@@ -37,6 +38,7 @@ export default function AvatarScreen() {
   ];
   // console.log("avatarItems: ", avatarItems);
 
+  // 이미지 아이템 id 추출
   const getImageId = (url: string) => {
     const filename = url.split("/").pop() ?? "";
     const id = filename.split(".")[0]; // hats/01.png -> 01만 뽑아오기
@@ -48,11 +50,13 @@ export default function AvatarScreen() {
     setAvatarItem((prev) => ({ ...prev, [name]: getImageId(item) }));
   };
 
+  // 각 탭 페이지 이동
   const handlePressTab = (index: number) => {
     pagerRef.current?.setPage(index);
     setCurrentTab(index);
   };
 
+  // 아바타 저장
   const handleSaveAvatar = () => {
     profileMutation.mutate(avatarItem, {
       onSuccess: () => {
@@ -65,6 +69,7 @@ export default function AvatarScreen() {
   };
 
   useEffect(() => {
+    // 헤더 색상 변경
     navigation.setOptions({
       headerStyle: {
         backgroundColor: colors.ORANGE_200,
