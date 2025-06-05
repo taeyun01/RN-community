@@ -1,3 +1,4 @@
+import { baseUrls } from "@/api/axios";
 import AvatarItem from "@/components/AvatarItem";
 import FixedBottomCTA from "@/components/FixedBottomCTA";
 import Tab from "@/components/Tab";
@@ -6,8 +7,9 @@ import useAuth from "@/hooks/queries/useAuth";
 import useGetAvatarItems from "@/hooks/queries/useGetAvatarItems";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, Platform, StyleSheet, View } from "react-native";
 import PagerView from "react-native-pager-view";
+import { SvgUri } from "react-native-svg";
 import Toast from "react-native-toast-message";
 
 const avatarTabs = ["모자", "얼굴", "상의", "하의", "손", "피부"] as const;
@@ -24,7 +26,7 @@ export default function AvatarScreen() {
     topId: auth?.topId ?? "",
     bottomId: auth?.bottomId ?? "",
     handId: auth?.handId ?? "",
-    skinId: auth?.skinId ?? "",
+    skinId: auth?.skinId ?? "01", // 피부 기본값 흰색
   });
 
   // 아바타 아이템 데이터
@@ -68,6 +70,16 @@ export default function AvatarScreen() {
     });
   };
 
+  const getAvatarItemUrl = (category: string, id?: string) => {
+    const baseUrl = Platform.OS === "ios" ? baseUrls.ios : baseUrls.android;
+
+    if (category === "default" || !Boolean(id)) {
+      return `${baseUrl}/default/frame.svg`;
+    }
+
+    return `${baseUrl}/items/${category}/${id}.svg`;
+  };
+
   useEffect(() => {
     // 헤더 색상 변경
     navigation.setOptions({
@@ -80,6 +92,50 @@ export default function AvatarScreen() {
   return (
     <>
       <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <View style={styles.avatarContainer}>
+            {avatarItem.hatId && (
+              <SvgUri
+                uri={getAvatarItemUrl("hats", avatarItem.hatId)}
+                style={[styles.avatar, { zIndex: 70 }]}
+              />
+            )}
+            {avatarItem.faceId && (
+              <SvgUri
+                uri={getAvatarItemUrl("faces", avatarItem.faceId)}
+                style={[styles.avatar, { zIndex: 60 }]}
+              />
+            )}
+            {avatarItem.topId && (
+              <SvgUri
+                uri={getAvatarItemUrl("tops", avatarItem.topId)}
+                style={[styles.avatar, { zIndex: 50 }]}
+              />
+            )}
+            {avatarItem.bottomId && (
+              <SvgUri
+                uri={getAvatarItemUrl("bottoms", avatarItem.bottomId)}
+                style={[styles.avatar, { zIndex: 40 }]}
+              />
+            )}
+            <SvgUri
+              uri={getAvatarItemUrl("default")}
+              style={[styles.avatar, { zIndex: 30 }]}
+            />
+            {avatarItem.skinId && (
+              <SvgUri
+                uri={getAvatarItemUrl("skins", avatarItem.skinId)}
+                style={[styles.avatar, { zIndex: 20 }]}
+              />
+            )}
+            {avatarItem.handId && (
+              <SvgUri
+                uri={getAvatarItemUrl("hands", avatarItem.handId)}
+                style={[styles.avatar, { zIndex: 10 }]}
+              />
+            )}
+          </View>
+        </View>
         <View style={styles.tabContainer}>
           {avatarTabs.map((tab, index) => (
             <Tab
@@ -97,27 +153,22 @@ export default function AvatarScreen() {
           initialPage={0}
           onPageSelected={(e) => setCurrentTab(e.nativeEvent.position)}
         >
-          {avatarItems.map((items, index) => {
-            return (
-              <FlatList
-                key={items.id}
-                data={items.data}
-                keyExtractor={(item, index) => String(index)}
-                numColumns={3}
-                contentContainerStyle={styles.listContainer}
-                renderItem={({ item }) => (
-                  <AvatarItem
-                    uri={item}
-                    isSelected={
-                      getImageId(item) ===
-                      avatarItem[items.name as keyof typeof avatarItem]
-                    }
-                    onPress={() => handlePressItem(items.name, item)}
-                  />
-                )}
-              />
-            );
-          })}
+          {avatarItems.map((list) => (
+            <FlatList
+              key={list.name}
+              data={list.data}
+              keyExtractor={(item, index) => String(index)}
+              numColumns={3}
+              contentContainerStyle={styles.listContainer}
+              renderItem={({ item }) => (
+                <AvatarItem
+                  uri={item}
+                  isSelected={getImageId(item) === list.id}
+                  onPress={() => handlePressItem(list.name, item)}
+                />
+              )}
+            />
+          ))}
         </PagerView>
       </View>
 
